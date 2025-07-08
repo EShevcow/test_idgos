@@ -8,6 +8,7 @@ function App() {
   return (
   <Routes>
    <Route path='/' element={<GreetingsPage />} />
+   <Route path='/s/:id' element={<GreetingsPage />} />
   </Routes>
   );
 }

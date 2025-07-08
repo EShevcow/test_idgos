@@ -5,6 +5,8 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import 'materialize-css/dist/css/materialize.min.css';
+import '../src/libs/icofont/icofont.min.css';
+//import 'materialize-css/dist/js/materialize.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
