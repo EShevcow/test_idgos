@@ -4,16 +4,26 @@ import { useEffect, useState } from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import { ServerApi } from "../api/ServerApi";
 
-
+// Import Styles
 import './styles/greeting.css';
+import './styles/common.css';
 
 export default function GreetingsPage() {
-    const serverApi = new ServerApi();
 
+ // Connect server class
+ const serverApi = new ServerApi();
+
+ //Состояние разметки
  const [isDisabled, setIsDisabled] = useState(true);
  const [isChecked, setIsChecked] = useState(false);
- const [visibleStatus, setVisibleStatus] = useState("d-block");
+ //const [visibleStatus, setVisibleStatus] = useState("d-block");
+ const [userFound, setUserFound] = useState(true);
+ const [userFoundText, setUserFoundText] = useState('Ваша ссылка просрочена');
  const navigate = useNavigate();
+
+ //Работа с Айпишниками
+ const [currIp, setCurrIp] = useState('');
+ const [ip, setIp] = useState('');
 
  //! Закрыть для локального тестирования
 //const [operator_id, setOperatorId] = useState(searchParams.get("c"));
@@ -24,8 +34,7 @@ export default function GreetingsPage() {
  const [user_id, setUserId] = useState('3027');
 
 
-
-  // check box, галочка активна или нет "Я согласен с политикой конфиденциальности"
+ // check box, галочка активна или нет "Я согласен с политикой конфиденциальности"
  const handleCheckboxChange = () => {
     setIsChecked((prevState) => !prevState);
     setIsDisabled(!isDisabled);
@@ -64,13 +73,36 @@ export default function GreetingsPage() {
         });
     };
 
+    async function getCountryByIP() {
+        try {
+            const response = await fetch('http://ip-api.com/json/');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+
+            if (data.status === 'fail') {
+                // window.location.reload();
+                setCurrIp('Произошла ошибка'); // или любое другое значение по умолчанию
+            } else {
+                setIp(data.query)
+                setCurrIp(data.countryCode);
+            }
+        } catch (error) {
+            console.error('Произошла ошибка при получении данных:', error);
+            // window.location.reload();
+            setCurrIp('Произошла ошибка'); // или любое другое значение по умолчанию
+        }
+    }
+
    //
     useEffect(() => {
         //console.log(operator_id, user_id);
 
         //Не переданы данные в ссылке
         if (!operator_id || !user_id) {
-            setVisibleStatus("d-none");
+           // setVisibleStatus("d-none");
+           setUserFound(false);
             // Разбор "короткого url"
             let currentURL = window.location.href;
             currentURL = currentURL.replace('http://localhost:3000', 'https://app.idgos.ru');
@@ -86,18 +118,23 @@ export default function GreetingsPage() {
                             setOperatorId(q_arr[1].replace('c=', ''));
                             setUserId(q_arr[0].replace('u=', ''));
 
-                            document.getElementById("disable_link").classList.add("d-none");
+                           // document.getElementById("disable_link").classList.add("d-none");
+                              setUserFound(true);
                         } else {
-                            document.getElementById("disable_link").classList.remove("d-none");
-                            document.getElementById("disable_link").textContent = 'Пользователь не найден';
+                           // document.getElementById("disable_link").classList.remove("d-none");
+                              setUserFound(true);
+                           // document.getElementById("disable_link").textContent = 'Пользователь не найден';
+                              setUserFoundText('Пользователь не найден');
                         }
                     }
                 });
             }
         } else {
-            setVisibleStatus("d-block");
+          // setVisibleStatus("d-block");
+             setUserFound(terue);
             //Проверка разрешения на вход по ссылке. Проверяется временная метка. Действительна сутки
             const link_date = Date.now() / 1000;
+            console.log(link_date);
             const body = {
                 action: "getLinkActiveDate",
                 data: {user_id: user_id, operator_id: operator_id, link_date: link_date,},
@@ -105,8 +142,9 @@ export default function GreetingsPage() {
             serverApi.sendPostRequest(body).then((response) => {
                 if (response.status === 200) {
                     if (!response.data.success) {
-                        document.getElementById("disable_link").classList.remove("d-none");
-                        setVisibleStatus("d-none");
+                       setUserFound(true);
+                      // document.getElementById("disable_link").classList.remove("d-none");
+                      // setVisibleStatus("d-none");
                         localStorage.clear();
                     } else {
                         operatorInfo();
@@ -116,18 +154,46 @@ export default function GreetingsPage() {
         }
         // localStorage.clear()
     }, [operator_id, user_id]);
+    
+       useEffect(() => {
+        //! Пока прибито жестко
+        setIp('');
+        setCurrIp('RU');
+       
+         getCountryByIP();
+        // const fetchData = async () => {
+        //   try {
+        //     const ipResponse = await axios.get('https://api.ipify.org?format=json');
+        //     console.log(ipResponse?.data?.ip)
+        //     getCountryByIP()
+        //     // const ipResponse = await axios.get('http://ip-api.com/json');
+        //     // const countryResponse = await axios.get(`https://ipapi.co/${ipResponse?.data?.ip}/json/`);
+        //     // // console.log(ipResponse);
+        //     // setIp(ipResponse?.data?.ip)
+        //     // setCurrIp(countryResponse?.data?.country_code);
+        //   } catch (error) {
+        //     console.error('Произошла ошибка при получении данных:', error);
+        //     // window.location.reload();
+        //     setCurrIp('Поризошла ошибка'); // или любое другое значение по умолчанию
+        //   }
+        // };
+
+        // fetchData();
+    }, []);
+
 
     return(
         <div className="wrapper">
         <div className="container">
             <div className="row">
                 <div className="col s12 center-align">
-                   <h1>IDGOS <i class="icofont-bug"></i> </h1> 
+                   <h1>IDGOS <i className="icofont-bug"></i> </h1> 
                    <p><b>Добро пожаловать в IDGOS</b></p>
                    <p>Сервис для подписания документов через ГосУслуги</p>
-
-                   <p className="danger d-none" id="disable_link"><b>Ваша ссылка просрочена</b></p>
-                      <div className={visibleStatus}>          
+                 {userFound && (  <p className="danger" id="disable_link"><b>{userFoundText}</b></p>) }
+              
+                  { currIp == 'RU' || currIp == 'UA' || currIp == 'BY' ?
+                       (!userFound && <>    
                       <p>
                         <label>
                           <input type="checkbox"  checked={isChecked} onChange={handleCheckboxChange}/>
@@ -140,7 +206,19 @@ export default function GreetingsPage() {
                       disabled={isDisabled} 
                       >Продолжить</a>
 
-                      </div>
+                        </>) : (currIp == '' ? <img className="width30px" src="../img/VAyR.gif"/> :
+                                (currIp == 'Поризошла ошибка' ?
+                                        <p className={'text-center'}>
+                                            Произошла ошибка , попробуйте перезагрузить страницу
+                                        </p> :
+                                        <div children={'center-align'}> 
+                                            <p><b>Внимание!</b></p>
+                                            <p>Нет возможности доступа.</p>
+                                            <p>Ваш IP адрес принадлежит другой стране.</p>
+                                            <p>Отключите VPN или вернитесь в матушку Россию, ведь здесь своих не бросают!</p>
+                                            <p>IP адрес: {currIp}{' '}{ip}</p>
+                                        </div>
+                            ) )  }
 
                 </div>  
             </div>

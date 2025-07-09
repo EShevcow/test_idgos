@@ -1,0 +1,95 @@
+.width100 {
+    width: 100%;
+}
+
+.width95 {
+    width: 95%;
+}
+
+.width90 {
+    width: 90%;
+}
+
+.width20px {
+    width: 20px;
+}
+
+.width24px {
+    width: 24px;
+}
+
+.width30px {
+    width: 30px;
+}
+
+.height20px {
+    height: 20px;
+}
+
+.height24px {
+    height: 24px;
+}
+
+.marginLeft10px {
+    margin-left: 10px;
+}
+
+.widthI {
+    width: inherit;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.cursor_not_allowed {
+    cursor: not-allowed;
+}
+
+.margin100_top {
+    margin-top: 100px;
+}
+
+.margin20_bottom {
+    margin-bottom: 20px;
+}
+
+.weight400_project {
+    font-weight: 400;
+}
+
+.weight500_project {
+    font-weight: 500;
+}
+
+.weight600_project {
+    font-weight: 600;
+}
+
+.weight700_project {
+    font-weight: 700;
+}
+
+.size12_project {
+    font-size: 12px;
+}
+
+.size13_project {
+    font-size: 13px;
+}
+
+.size14_project {
+    font-size: 14px;
+}
+
+.size16_project {
+    font-size: 16px;
+}
+
+.size18_project {
+    font-size: 18px;
+}
+
+.size20_project {
+    font-size: 20px;
+}
