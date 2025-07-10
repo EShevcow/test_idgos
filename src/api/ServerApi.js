@@ -47,6 +47,49 @@ class ServerApi{
             },
         });
     };
+
+     //
+    async updateHistoryStep(keys) {
+        const body = JSON.stringify({
+            action: 'updateHistoryStep',
+            data: {
+                operator_id: localStorage.getItem('operator_id'),
+                user_id: localStorage.getItem('user_id'),
+                keys: keys,
+            },
+        });
+        return await axios.post('https://esia.idgos.ru/server/router.php', body, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`,
+            },
+        });
+    };
+
+    //
+    async getUrl(name) {
+       
+        return await axios.post(`${this.esiaUrl}https://app.idgos.ru/esia&operator_name=${name}`, '');
+    };
+
+     //
+    async setUserToken(user_id, operator_id, token, time_exp) {
+        const body = JSON.stringify({
+            action: 'setUserToken',
+            data: {
+                user_id: user_id,
+                operator_id: operator_id,
+                token: token,
+                time_exp: time_exp,
+            },
+        });
+        return await axios.post('https://esia.idgos.ru/server/router.php', body, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`,
+            },
+        });
+    };
 }
 
 export {ServerApi};

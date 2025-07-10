@@ -31,7 +31,7 @@ export default function GreetingsPage() {
 
  //? Открыть для локального тестирования
  const [operator_id, setOperatorId] = useState('1');
- const [user_id, setUserId] = useState('3027');
+ const [user_id, setUserId] = useState('3071');
 
 
  // check box, галочка активна или нет "Я согласен с политикой конфиденциальности"
@@ -58,14 +58,12 @@ export default function GreetingsPage() {
             if (response.status == 200) {
                 localStorage.setItem("operator_name", response.data.name);
 
-                //! Было ранее
-                // localStorage.setItem("phone", response.data.phone);
-                // localStorage.setItem("site", response.data.site);
-
+            
                 const callArray = response.data.call;
                 const payArray = response.data.pay;
                 const siteArray = response.data.site;
-                // Преобразуем массив в строку и сохраняем в localStorage
+
+            
                 localStorage.setItem("phone", JSON.stringify(callArray));
                 localStorage.setItem("pay", JSON.stringify(payArray));
                 localStorage.setItem("site", JSON.stringify(siteArray));
@@ -122,7 +120,7 @@ export default function GreetingsPage() {
                               setUserFound(true);
                         } else {
                            // document.getElementById("disable_link").classList.remove("d-none");
-                              setUserFound(true);
+                           //   setUserFound(true);
                            // document.getElementById("disable_link").textContent = 'Пользователь не найден';
                               setUserFoundText('Пользователь не найден');
                         }
@@ -131,7 +129,7 @@ export default function GreetingsPage() {
             }
         } else {
           // setVisibleStatus("d-block");
-             setUserFound(terue);
+             setUserFound(false);
             //Проверка разрешения на вход по ссылке. Проверяется временная метка. Действительна сутки
             const link_date = Date.now() / 1000;
             console.log(link_date);
